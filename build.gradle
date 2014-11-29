@@ -28,7 +28,7 @@ repositories {
 
 dependencies {
 	compile "com.bertramlabs.plugins:asset-pipeline-core:2.0.2"
-	compile 'org.codehaus.groovy:groovy-all:2.2.2'
+	compile 'org.codehaus.groovy:groovy:2.0.7'
     compile 'org.mozilla:rhino:1.7R4'
     compile 'log4j:log4j:1.2.17'
 
