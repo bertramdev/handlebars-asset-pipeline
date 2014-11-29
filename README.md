@@ -14,6 +14,19 @@ By default the templateRoot for your template names is specified as 'templates'.
 It is also possible to change the template path seperator for templatenames to be used by handlebars:
 
 
+Gradle Example:
+
+```groovy
+assets {
+	config = [
+		handlebars: [
+			templateRoot: 'templates',
+			templatePathSeperator: '/'
+		]
+	]
+}
+```
+
 Grails Example:
 ```groovy
 grails {
