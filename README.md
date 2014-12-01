@@ -8,6 +8,23 @@ The JVM `handlebars-asset-pipeline` is a plugin that provides handlebars templat
 
 For more information on how to use asset-pipeline, visit [here](http://www.github.com/bertramdev/asset-pipeline).
 
+Installation
+------------
+
+Simply add this plugin to your classpath in gradle or dependencies list depending on how you are using it
+
+```gradle
+//Example build.gradle file
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.bertramlabs.plugins.asset-pipeline-gradle:2.0.6'
+    classpath 'com.bertramlabs.plugins.less-asset-pipeline:2.0.4'
+  }
+}
+```
 
 Usage
 -----
