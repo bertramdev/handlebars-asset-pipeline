@@ -4,7 +4,7 @@ apply plugin: 'maven'
 apply plugin: 'com.jfrog.bintray'
 
 group = 'com.bertramlabs.plugins'
-version = '2.0.2'
+version = '2.0.5'
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 buildscript {
@@ -27,7 +27,7 @@ repositories {
 
 
 dependencies {
-	compile "com.bertramlabs.plugins:asset-pipeline-core:2.0.2"
+	compile "com.bertramlabs.plugins:asset-pipeline-core:2.0.5"
 	compile 'org.codehaus.groovy:groovy:2.0.7'
     compile 'org.mozilla:rhino:1.7R4'
     compile 'log4j:log4j:1.2.17'
@@ -39,7 +39,33 @@ publishing {
     publications {
         maven(MavenPublication) {
             artifactId 'handlebars-asset-pipeline'
-
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name 'handlebars-asset-pipeline'
+                    description 'Handlebars.js Transpiler Extension for the JVM Based Asset-Pipeline.'
+                    url 'https://github.com/bertramdev/handlebars-asset-pipeline'
+                    scm {
+                        url 'https://github.com/bertramdev/handlebars-asset-pipeline'
+                        connection 'scm:https://bertramdev@github.com/bertramdev/handlebars-asset-pipeline.git'
+                        developerConnection 'scm:git://github.com/bertramdev/handlebars-asset-pipeline.git'
+                    }
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'davydotcom'
+                            name 'David Estes'
+                            email 'davydotcom@gmail.com'
+                        }
+                    }
+                }
+            }
             from components.java
             artifact sourcesJar
             artifact javadocJar
