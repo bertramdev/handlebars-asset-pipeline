@@ -21,7 +21,7 @@ buildscript {
   }
   dependencies {
     classpath 'com.bertramlabs.plugins.asset-pipeline-gradle:2.0.6'
-    classpath 'com.bertramlabs.plugins.less-asset-pipeline:2.0.4'
+    classpath 'com.bertramlabs.plugins.handlebars-asset-pipeline:1.3.0'
   }
 }
 ```
