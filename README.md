@@ -1,5 +1,9 @@
 Handlebars Asset-Pipeline
 =========================
+[![Build Status](https://travis-ci.org/bertramdev/handlebars-asset-pipeline.svg?branch=master)](https://travis-ci.org/bertramdev/handlebars-asset-pipeline)
+
+Overview
+--------
 The JVM `handlebars-asset-pipeline` is a plugin that provides handlebars template precompiler support to asset-pipeline.
 
 For more information on how to use asset-pipeline, visit [here](http://www.github.com/bertramdev/asset-pipeline).
