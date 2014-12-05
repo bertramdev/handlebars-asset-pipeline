@@ -28,18 +28,15 @@ class HandlebarsProcessor extends AbstractProcessor {
 
 	Scriptable globalScope
 	ClassLoader classLoader
-	def precompilerMode
 	HandlebarsProcessor(AssetCompiler precompiler){
 		super(precompiler)
 		try {
-			this.precompilerMode = precompiler ? true : false
 			classLoader = getClass().getClassLoader()
-			def handlebarsJsResource = classLoader.getResource('asset/pipeline/handlebars/handlebars.js')
 
 			Context cx = Context.enter()
 			cx.setOptimizationLevel(-1)
 			globalScope = cx.initStandardObjects()
-			cx.evaluateString globalScope, handlebarsJsResource.getText("UTF-8"), handlebarsJsResource.file, 1, null
+			loadHandlebars(cx)
 		} catch (Exception e) {
 			throw new Exception("Handlebars Engine initialization failed.", e)
 		} finally {
@@ -47,6 +44,19 @@ class HandlebarsProcessor extends AbstractProcessor {
 				Context.exit()
 			} catch (IllegalStateException e) {}
 		}
+	}
+
+	public void loadHandlebars(Context cx) {
+		String scanPath = AssetPipelineConfigHolder.config?.handlebars?.scanPath ?: 'handlebars.js'
+		AssetFile handlebarsAssetFile = AssetHelper.fileForFullName(scanPath)
+
+		if(handlebarsAssetFile) {
+			cx.evaluateString globalScope, handlebarsAssetFile.inputStream.getText('UTF-8'), handlebarsAssetFile.name, 1, null
+		} else {
+			def handlebarsJsResource = classLoader.getResource('asset/pipeline/handlebars/handlebars.js')
+			cx.evaluateString globalScope, handlebarsJsResource.getText('UTF-8'), handlebarsJsResource.file, 1, null
+		}
+
 	}
 
 	String process(String input,AssetFile assetFile) {

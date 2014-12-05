@@ -25,10 +25,19 @@ repositories {
 
 }
 
+configurations {
+    provided
+}
+ 
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
 
 dependencies {
-	compile "com.bertramlabs.plugins:asset-pipeline-core:2.0.5"
-	compile 'org.codehaus.groovy:groovy:2.0.7'
+	compile "com.bertramlabs.plugins:asset-pipeline-core:2.0.13"
+	provided 'org.codehaus.groovy:groovy-all:2.0.7'
     compile 'org.mozilla:rhino:1.7R4'
     compile 'log4j:log4j:1.2.17'
 
@@ -74,8 +83,8 @@ publishing {
 }
 
 bintray {
-    user = hasProperty('bintrayUser') ? bintrayUser: 'anonymous'
-    key = hasProperty('bintrayKey') ? bintrayKey : null
+    user = project.hasProperty('bintrayUser') ? bintrayUser: 'anonymous'
+    key = project.hasProperty('bintrayKey') ? bintrayKey : null
     publications = ['maven']
     pkg {
         repo = 'asset-pipeline'
