@@ -90,9 +90,11 @@ class HandlebarsProcessor extends AbstractProcessor {
 	}
 
 	def relativePath(parentPath, templateRoot, templateSeperator) {
-		def path          = parentPath.split("/")
+		def path          = parentPath?.split("/") ?: ''
 		def startPosition = path.findLastIndexOf{ it == templateRoot }
-
+		if(startPosition == -1) {
+			return ""
+		}
 		if(startPosition+1 >= path.length) {
 			return ""
 		}
