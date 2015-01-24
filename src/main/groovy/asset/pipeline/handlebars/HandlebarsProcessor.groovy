@@ -20,6 +20,7 @@ import asset.pipeline.AssetHelper
 import asset.pipeline.AssetFile
 import asset.pipeline.AssetCompiler
 import asset.pipeline.AssetPipelineConfigHolder
+import asset.pipeline.DirectiveProcessor
 import org.mozilla.javascript.Context
 import org.mozilla.javascript.Scriptable
 import asset.pipeline.AbstractProcessor
@@ -51,7 +52,9 @@ class HandlebarsProcessor extends AbstractProcessor {
 		AssetFile handlebarsAssetFile = AssetHelper.fileForFullName(scanPath)
 
 		if(handlebarsAssetFile) {
-			cx.evaluateString globalScope, handlebarsAssetFile.inputStream.getText('UTF-8'), handlebarsAssetFile.name, 1, null
+			def directiveProcessor = new DirectiveProcessor('application/javascript')
+
+			cx.evaluateString globalScope, directiveProcessor.compile(handlebarsAssetFile), handlebarsAssetFile.name, 1, null
 		} else {
 			def handlebarsJsResource = classLoader.getResource('asset/pipeline/handlebars/handlebars.js')
 			cx.evaluateString globalScope, handlebarsJsResource.getText('UTF-8'), handlebarsJsResource.file, 1, null
