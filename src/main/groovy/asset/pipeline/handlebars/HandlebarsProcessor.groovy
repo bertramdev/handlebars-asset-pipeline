@@ -29,6 +29,7 @@ class HandlebarsProcessor extends AbstractProcessor {
 
 	Scriptable globalScope
 	ClassLoader classLoader
+	static def wrapTemplateCustom
 	HandlebarsProcessor(AssetCompiler precompiler){
 		super(precompiler)
 		try {
@@ -38,6 +39,10 @@ class HandlebarsProcessor extends AbstractProcessor {
 			cx.setOptimizationLevel(-1)
 			globalScope = cx.initStandardObjects()
 			loadHandlebars(cx)
+			if (AssetPipelineConfigHolder.config?.handlebars?.wrapTemplate && !HandlebarsProcessor.wrapTemplateCustom) {
+				HandlebarsProcessor.wrapTemplateCustom = new groovy.text.GStringTemplateEngine(this.class.classLoader).createTemplate(AssetPipelineConfigHolder.config?.handlebars?.wrapTemplate)
+			}
+
 		} catch (Exception e) {
 			throw new Exception("Handlebars Engine initialization failed.", e)
 		} finally {
@@ -107,11 +112,17 @@ class HandlebarsProcessor extends AbstractProcessor {
 	}
 
 	def wrapTemplate = { String templateName, String compiledTemplate ->
-		"""
+		
+		if(HandlebarsProcessor.wrapTemplateCustom) {
+			return HandlebarsProcessor.wrapTemplateCustom.make([compiledTemplate: compiledTemplate, templateName: templateName]).toString()
+		} else {
+			"""
 		(function(){
 			var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
 				templates['$templateName'] = template($compiledTemplate);
 				}());
-				"""
+				"""	
+		}
+		
 	}
 }

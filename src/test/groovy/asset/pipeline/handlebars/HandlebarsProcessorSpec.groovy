@@ -17,6 +17,7 @@
 package asset.pipeline.handlebars
 
 import spock.lang.Specification
+import asset.pipeline.AssetPipelineConfigHolder
 
 /**
 * @author David Estes
@@ -32,6 +33,7 @@ class HandlebarsProcessorSpec extends Specification {
 		</body>
 		</html>
 		'''
+		AssetPipelineConfigHolder.config = [:]
 		def assetFile = new HandlebarsAssetFile()
 		assetFile.path = "templates/test.handlebars"
 		def processor = new HandlebarsProcessor()
@@ -39,6 +41,37 @@ class HandlebarsProcessorSpec extends Specification {
 		def output = processor.process(handlebarsText, assetFile)
 		then:
 		output.contains('templates[\'test\']')
+	}
+
+
+	def "should be able to use a custom wrapped template"() {
+		given:
+		def handlebarsText = '''
+		<html>
+		<body>
+			<h1>{{title}}</h1>
+		</body>
+		</html>
+		'''
+		def template = '''
+		  (function(){
+			var template = HandlebarsCustom.template, templates = Handlebars.templates = Handlebars.templates || {};
+				templates['$templateName'] = template($compiledTemplate);
+		}());
+		'''
+		def assetFile = new HandlebarsAssetFile()
+		assetFile.path = "templates/test.handlebars"
+		AssetPipelineConfigHolder.config = [
+			handlebars: [
+				wrapTemplate: template
+			]
+		]
+		def processor = new HandlebarsProcessor()
+		when:
+		def output = processor.process(handlebarsText, assetFile)
+		then:
+		output.contains('templates[\'test\']')
+		output.contains('HandlebarsCustom')
 	}
 
 
