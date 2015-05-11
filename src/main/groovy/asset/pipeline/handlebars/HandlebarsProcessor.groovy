@@ -98,7 +98,7 @@ class HandlebarsProcessor extends AbstractProcessor {
 	}
 
 	def relativePath(parentPath, templateRoot, templateSeperator) {
-		if(parentPath == templateRoot) {
+		if(!parentPath || parentPath == templateRoot) {
 			return ""
 		} else if(!parentPath.startsWith(templateRoot + '/')) {
 			return parentPath.split("/").join(templateSeperator)

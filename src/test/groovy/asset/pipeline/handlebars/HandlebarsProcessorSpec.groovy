@@ -62,6 +62,25 @@ class HandlebarsProcessorSpec extends Specification {
 		output.contains('templates[\'sub/test\']')
 	}
 
+	void "should handle compiling templates with no parent path"() {
+				given:
+		def handlebarsText = '''
+		<html>
+		<body>
+			<h1>{{title}}</h1>
+		</body>
+		</html>
+		'''
+		AssetPipelineConfigHolder.config = [:]
+		def assetFile = new HandlebarsAssetFile()
+		assetFile.path = "test.handlebars"
+		def processor = new HandlebarsProcessor()
+		when:
+		def output = processor.process(handlebarsText, assetFile)
+		then:
+		output.contains('templates[\'test\']')
+	}
+
 	void "should compile handlebars into js with nested template name of not part of template root"() {
 		given:
 		def handlebarsText = '''
