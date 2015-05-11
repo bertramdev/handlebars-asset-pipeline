@@ -43,6 +43,63 @@ class HandlebarsProcessorSpec extends Specification {
 		output.contains('templates[\'test\']')
 	}
 
+	void "should compile handlebars into js with nested template name"() {
+		given:
+		def handlebarsText = '''
+		<html>
+		<body>
+			<h1>{{title}}</h1>
+		</body>
+		</html>
+		'''
+		AssetPipelineConfigHolder.config = [:]
+		def assetFile = new HandlebarsAssetFile()
+		assetFile.path = "templates/sub/test.handlebars"
+		def processor = new HandlebarsProcessor()
+		when:
+		def output = processor.process(handlebarsText, assetFile)
+		then:
+		output.contains('templates[\'sub/test\']')
+	}
+
+	void "should compile handlebars into js with nested template name of not part of template root"() {
+		given:
+		def handlebarsText = '''
+		<html>
+		<body>
+			<h1>{{title}}</h1>
+		</body>
+		</html>
+		'''
+		AssetPipelineConfigHolder.config = [:]
+		def assetFile = new HandlebarsAssetFile()
+		assetFile.path = "sub/test.handlebars"
+		def processor = new HandlebarsProcessor()
+		when:
+		def output = processor.process(handlebarsText, assetFile)
+		then:
+		output.contains('templates[\'sub/test\']')
+	}
+
+	void "should compile handlebars into js with nested template name if nested template name contains root name"() {
+		given:
+		def handlebarsText = '''
+		<html>
+		<body>
+			<h1>{{title}}</h1>
+		</body>
+		</html>
+		'''
+		AssetPipelineConfigHolder.config = [:]
+		def assetFile = new HandlebarsAssetFile()
+		assetFile.path = "sub/templates/test.handlebars"
+		def processor = new HandlebarsProcessor()
+		when:
+		def output = processor.process(handlebarsText, assetFile)
+		then:
+		output.contains('templates[\'sub/templates/test\']')
+	}
+
 
 	def "should be able to use a custom wrapped template"() {
 		given:

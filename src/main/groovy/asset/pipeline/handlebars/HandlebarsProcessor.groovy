@@ -98,17 +98,13 @@ class HandlebarsProcessor extends AbstractProcessor {
 	}
 
 	def relativePath(parentPath, templateRoot, templateSeperator) {
-		def path          = parentPath?.split("/") ?: ''
-		def startPosition = path.findLastIndexOf{ it == templateRoot }
-		if(startPosition == -1) {
+		if(parentPath == templateRoot) {
 			return ""
+		} else if(!parentPath.startsWith(templateRoot + '/')) {
+			return parentPath.split("/").join(templateSeperator)
 		}
-		if(startPosition+1 >= path.length) {
-			return ""
-		}
-
-		path = path[(startPosition+1)..-1]
-		return path.join(templateSeperator)
+		def path = parentPath.substring(templateRoot.size() + 1)
+		return path.split("/").join(templateSeperator)
 	}
 
 	def wrapTemplate = { String templateName, String compiledTemplate ->
